@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Gavin&#39;s space</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Gavin's space">
+<meta property="og:url" content="http://germanyt.github.io/index.html">
+<meta property="og:site_name" content="Gavin's space">
+<meta property="og:description">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Gavin's space">
+<meta name="twitter:description">
+  
+    <link rel="alternate" href="/atom.xml" title="Gavin&#39;s space" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Gavin&#39;s space</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://germanyt.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-React-study-notes-2" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/React-study-notes-2/" class="article-date">
+  <time datetime="2016-05-17T02:39:14.000Z" itemprop="datePublished">2016-05-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/React-study-notes-2/">React 学习笔记 - 2</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>本节中包含<code>React-router</code>控制React SPA路由。</p>
+<p>关于<code>React-router</code>的详细使用，请查阅官方文档。</p>
+<h2 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; render &#125; <span class="keyword">from</span> <span class="string">'react-dom'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> &#123;Router, Route, IndexRoute, Link&#125; <span class="keyword">from</span> <span class="string">'react-router'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">App</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        &lt;h1&gt;Welcome to React!&lt;/h1&gt;</span><br><span class="line">        &lt;ul&gt;</span><br><span class="line">          &lt;li&gt;&lt;Link to="/"&gt;Index&lt;/Link&gt;&lt;/li&gt;</span><br><span class="line">          &lt;li&gt;&lt;Link to="/about"&gt;About&lt;/Link&gt;&lt;/li&gt;</span><br><span class="line">        &lt;/ul&gt;</span><br><span class="line"></span><br><span class="line">        &#123;this.props.children&#125;</span><br><span class="line">      &lt;/div&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Index</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">    	&lt;div&gt;</span><br><span class="line">        &lt;h2&gt;Index&lt;/h2&gt;</span><br><span class="line">    	&lt;/div&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">About</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">    	&lt;div&gt;</span><br><span class="line">        &lt;h2&gt;About&lt;/h2&gt;</span><br><span class="line">    	&lt;/div&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">render( (</span><br><span class="line">	&lt;Router&gt;</span><br><span class="line">	  &lt;Route path="/" component=&#123;App&#125;&gt;</span><br><span class="line">        &lt;IndexRoute component=&#123;Index&#125; /&gt;</span><br><span class="line">        &lt;Route path="about" component=&#123;About&#125; /&gt;</span><br><span class="line">	  &lt;/Route&gt;</span><br><span class="line">	&lt;/Router&gt; </span><br><span class="line">), document.getElementById('content') );</span><br></pre></td></tr></table></figure>
+<p>运行以上代码能正常运行，URL地址为<code>http://hostname/#/pageRoute?_k=xxxx</code>，并在Console中看到以下警告<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Warning: [react-router] `Router` no longer defaults the history prop to hash history. Please use the `hashHistory` singleton instead. http://tiny.cc/router-defaulthistory</span><br></pre></td></tr></table></figure></p>
+<p>根据以上提示信息，给Router Component添加history属性 <code>&lt;Router history={hashHistory}&gt;</code>，<em>使用hashHistory前需要先在react-router模块中引入</em>。</p>
+<h4 id="URL格式"><a href="#URL格式" class="headerlink" title="URL格式"></a>URL格式</h4><ol>
+<li>想要使用<code>http://hostname/pageRoute</code>格式的URL地址，只需用 <code>browserHistory</code> 替换掉hashHistory即可。</li>
+<li>想要使用<code>http://hostname/projectName/pageRoute</code>格式的URL地址，需要引入 <code>useRouterHistory</code> 和 <code>history</code>模块的 <code>createHistory</code>，然后添加如下代码<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> history = useRouterHistory(createHistory)(&#123;</span><br><span class="line">  basename: <span class="string">'/projectName'</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="多级路由"><a href="#多级路由" class="headerlink" title="多级路由"></a>多级路由</h2><p>本节需到的API：</p>
+<ul>
+<li>IndexRoute from react-router</li>
+</ul>
+<p>多级路由需要将次级对应的<code>&lt;Route /&gt;</code>节点作为父级的字节点<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;Router&gt;</span><br><span class="line">  &lt;Route path="/" component=&#123;App&#125;&gt;</span><br><span class="line">      &lt;IndexRoute component=&#123;Index&#125; /&gt;</span><br><span class="line">      &lt;Route path="about" component=&#123;About&#125;&gt;</span><br><span class="line">        &lt;Route path="author" component=&#123;Author&#125; /&gt;</span><br><span class="line">      &lt;/Route&gt;</span><br><span class="line">  &lt;/Route&gt;</span><br><span class="line">&lt;/Router&gt;</span><br></pre></td></tr></table></figure></p>
+<p>并在父级<code>component</code>中输出<code>{this.props.children}</code><br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">About</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        &lt;h2&gt;About&lt;/h2&gt;</span><br><span class="line">        &#123;this.props.children&#125;</span><br><span class="line">      &lt;/div&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>About Component</code>的文字出现在了<code>/about/author</code>中，怎么才能让<code>/about/author</code>不显示<code>About Component</code>的内容呢？<br>这时候就要用到<code>react-router</code>的另外一个Component <code>IndexRoute</code>，使用方法和 <code>Route</code> 相同，修改后的代码如下<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;Route path=<span class="string">"about"</span> component=&#123;About&#125;&gt;</span><br><span class="line">  &lt;IndexRoute component=&#123;AboutIndex&#125; /&gt;</span><br><span class="line">  &lt;Route path="author" component=&#123;Author&#125; /&gt;</span><br><span class="line">&lt;/Route&gt;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">About</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        &#123;this.props.children&#125;</span><br><span class="line">      &lt;/div&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AboutIndex</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        &lt;h2&gt;About&lt;/h2&gt;</span><br><span class="line">      &lt;/div&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Author</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        &lt;h2&gt;Author: Gavin&lt;/h2&gt;</span><br><span class="line">      &lt;/div&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="可变路由"><a href="#可变路由" class="headerlink" title="可变路由"></a>可变路由</h2><p>当需要路由<code>/user/gavin</code> <code>/user/david</code>等这类有规律且对应的Component是同一个的时候，可设置路由规则为<code>/user/:username</code><br>示例如下<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;Route path=<span class="string">"user"</span> component=&#123;User&#125;&gt;</span><br><span class="line">  &lt;IndexRoute component=&#123;UserIndex&#125; /&gt;</span><br><span class="line">  &lt;Route path=":username" component=&#123;UserCenter&#125; /&gt;</span><br><span class="line">&lt;/Route&gt;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        &#123;this.props.children&#125;</span><br><span class="line">      &lt;/div&gt;</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserIndex</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        &lt;h2&gt;User Index&lt;/h2&gt;</span><br><span class="line">      &lt;/div&gt;</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserCenter</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        &lt;h2&gt;User Name: &#123;this.props.params.username&#125;&lt;/h2&gt;</span><br><span class="line">      &lt;/div&gt;</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看出<code>:username</code>对应的值在Component中通过<code>this.props.params.username</code>获取。</p>
+<h2 id="Link"><a href="#Link" class="headerlink" title="Link"></a>Link</h2><p>应用内部链接需要使用<code>&lt;Link /&gt;</code>代替<code>&lt;a href=&quot;&quot;&gt;Link&lt;/a&gt;</code>，具体使用方法参考官方文档。</p>
+<h2 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h2><p>在1.x中提供了Mixin Lifecycle的方法，可以添加方法<code>routerWillLeave</code>，当离开当前Component触发，2.x版本已不再建议。<br>在2.x中相同需求的实现方法如下<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> RouteComponent = React.createClass(&#123;</span><br><span class="line">  contextTypes: &#123;</span><br><span class="line">    router: React.PropTypes.object.isRequired</span><br><span class="line">  &#125;,</span><br><span class="line">  componentDidMount() &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; route &#125; = <span class="keyword">this</span>.props</span><br><span class="line">    <span class="keyword">const</span> &#123; router &#125; = <span class="keyword">this</span>.context</span><br><span class="line">    router.setRouteLeaveHook(route, <span class="keyword">this</span>.routerWillLeave)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p><em>Tips: 这里用 <code>React.createClass</code>, 而不是继承React.Component将在下一节中阐述。</em></p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>React Router 还提供了一些有用的Component/Function：</p>
+<ul>
+<li><code>&lt;Redirect/&gt;</code> 路由跳转以便兼容旧路由</li>
+<li><code>RouterContext</code> 通过<code>context.router</code>访问router的方法（具体的实现原理将在下一节中讲到）</li>
+<li><code>withRouter</code> 通过<code>this.props.router</code>访问router的方法</li>
+</ul>
+<p><em>Tips: router 类似于1.x的history，2.x不再推荐history和Mixins，后续版本可能会移除</em></p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>相关API参考 <a href="https://github.com/reactjs/react-router/blob/master/docs/API.md" target="_blank" rel="external">React Router Document</a></p>
+<p>示例代码地址 <a href="https://github.com/germanyt/react-study-example/tree/master/example/2" target="_blank" rel="external">Github</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://germanyt.github.io/React-study-notes-2/" data-id="cioau0e4t000093wpblxojgwv" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-React-study-notes-1" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/React-study-notes-1/" class="article-date">
+  <time datetime="2016-05-16T09:39:37.000Z" itemprop="datePublished">2016-05-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/React-study-notes-1/">React 学习笔记 - 1</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="文档"><a href="#文档" class="headerlink" title="文档"></a>文档</h2><ol>
+<li>React <a href="https://facebook.github.io/react/docs/getting-started.html" target="_blank" rel="external">Document</a></li>
+<li>React-router <a href="https://github.com/reactjs/react-router/tree/master/docs" target="_blank" rel="external">Document</a></li>
+<li>Redux <a href="https://github.com/reactjs/redux" target="_blank" rel="external">Document</a></li>
+<li>Webpack <a href="http://webpack.github.io/" target="_blank" rel="external">Document</a></li>
+</ol>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>React SPA 开发，需要引入<code>React-router</code>控制路由，这里选择了<code>Redux</code>管理数据层，构建工具选择<code>Webpack</code>。</p>
+<p>本节中包含React SPA 开发的相关配置和一个React的简单示例。</p>
+<p><em>Tips ：文章中所有示例代码使用<code>ES6</code>。</em></p>
+<h2 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├──app</span><br><span class="line">|   ├──js</span><br><span class="line">|   |   ├──action</span><br><span class="line">|   |   ├──components</span><br><span class="line">|   |   ├──containers</span><br><span class="line">|   |   ├──reducer</span><br><span class="line">|   |   ├──store</span><br><span class="line">|   |   └──app.js</span><br><span class="line">|   └──index.html</span><br><span class="line">├──package.json</span><br><span class="line">├──server.js</span><br><span class="line">└──webpack.config.js</span><br></pre></td></tr></table></figure>
+<h2 id="Layout"><a href="#Layout" class="headerlink" title="Layout"></a>Layout</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">title</span>&gt;</span>react example<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"content"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"/build/app.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><em>Tips：示例中的样式使用bootstrap，在js中import，然后webpack构建</em></p>
+<h2 id="Webpack配置"><a href="#Webpack配置" class="headerlink" title="Webpack配置"></a>Webpack配置</h2><ol>
+<li>webpack 配置写入 webpack.config.js 文件</li>
+<li>本地开发使用webpack-server启动web服务，监控文件变化</li>
+</ol>
+<h4 id="webpack-config-js"><a href="#webpack-config-js" class="headerlink" title="webpack.config.js"></a>webpack.config.js</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"><span class="keyword">var</span> webpack = <span class="built_in">require</span>(<span class="string">'webpack'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line"></span><br><span class="line">  devtool: <span class="string">'inline-source-map'</span>, <span class="comment">// map 实际开发中，可使用NODE_ENV配置</span></span><br><span class="line"></span><br><span class="line">  entry: path.join(__dirname, <span class="string">'app'</span>, <span class="string">'js'</span>, <span class="string">'app.js'</span>),</span><br><span class="line"></span><br><span class="line">  output: &#123;</span><br><span class="line">    path: __dirname + <span class="string">'/build/'</span>,</span><br><span class="line">    filename: <span class="string">'app.js'</span>,</span><br><span class="line">    chunkFilename: <span class="string">'[id].chunk.js'</span>,</span><br><span class="line">    publicPath: <span class="string">'/build/'</span></span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="built_in">module</span>: &#123;</span><br><span class="line">    loaders: [</span><br><span class="line">      &#123; test: <span class="regexp">/\.(js|jsx)$/</span>, exclude: <span class="regexp">/node_modules/</span>, loader: <span class="string">'babel'</span>, query: &#123;</span><br><span class="line">          presets: [<span class="string">'es2015'</span>,<span class="string">'react'</span>]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;, <span class="comment">//使用babel把 jsx和es6 转换为 es5</span></span><br><span class="line">      &#123; test: <span class="regexp">/\.css$/</span>, loader: <span class="string">'style!css'</span> &#125;,</span><br><span class="line">      &#123; test: <span class="regexp">/\.(woff2?|svg)$/</span>, loader: <span class="string">'url?limit=10000'</span> &#125;,</span><br><span class="line">      &#123; test: <span class="regexp">/\.(ttf|eot)$/</span>, loader: <span class="string">'file'</span> &#125;,</span><br><span class="line">    ]</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  resolve: &#123;</span><br><span class="line">    extensions: [<span class="string">''</span>, <span class="string">'.js'</span>, <span class="string">'.jsx'</span>] <span class="comment">//处理文件扩展名</span></span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  plugins: [</span><br><span class="line">    <span class="comment">// new webpack.optimize.CommonsChunkPlugin('shared.js'),</span></span><br><span class="line">    <span class="keyword">new</span> webpack.DefinePlugin(&#123;</span><br><span class="line">      <span class="string">'process.env.NODE_ENV'</span>: <span class="built_in">JSON</span>.stringify(process.env.NODE_ENV || <span class="string">'development'</span>),</span><br><span class="line">      __DEV__: <span class="built_in">JSON</span>.stringify(<span class="built_in">JSON</span>.parse(process.env.DEBUG || <span class="string">'false'</span>))</span><br><span class="line">    &#125;)</span><br><span class="line">  ]</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="webpack-server"><a href="#webpack-server" class="headerlink" title="webpack-server"></a>webpack-server</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>)</span><br><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>)</span><br><span class="line"><span class="keyword">var</span> rewrite = <span class="built_in">require</span>(<span class="string">'express-urlrewrite'</span>)</span><br><span class="line"><span class="keyword">var</span> webpack = <span class="built_in">require</span>(<span class="string">'webpack'</span>)</span><br><span class="line"><span class="keyword">var</span> webpackDevMiddleware = <span class="built_in">require</span>(<span class="string">'webpack-dev-middleware'</span>)</span><br><span class="line"><span class="keyword">var</span> WebpackConfig = <span class="built_in">require</span>(<span class="string">'./webpack.config'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> app = express()</span><br><span class="line"></span><br><span class="line">app.use(webpackDevMiddleware(webpack(WebpackConfig), &#123;</span><br><span class="line">  publicPath: <span class="string">'/build/'</span>,</span><br><span class="line">  stats: &#123;</span><br><span class="line">    colors: <span class="literal">true</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;))</span><br><span class="line"></span><br><span class="line">app.use(express.static(__dirname))</span><br><span class="line"></span><br><span class="line">app.get(<span class="string">'/*'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">request, response</span>)</span>&#123;</span><br><span class="line">  response.sendFile(path.resolve(__dirname, <span class="string">'app'</span>, <span class="string">'index.html'</span>))</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">app.listen(<span class="number">8080</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'Server listening on http://localhost:8080, Ctrl+C to stop'</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h2 id="依赖模块"><a href="#依赖模块" class="headerlink" title="依赖模块"></a>依赖模块</h2><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"devDependencies"</span>: &#123;</span><br><span class="line">    <span class="attr">"babel-cli"</span>: <span class="string">"^6.7.5"</span>,</span><br><span class="line">    <span class="attr">"babel-core"</span>: <span class="string">"^6.7.6"</span>,</span><br><span class="line">    <span class="attr">"babel-eslint"</span>: <span class="string">"^5.0.4"</span>,</span><br><span class="line">    <span class="attr">"babel-loader"</span>: <span class="string">"^6.2.4"</span>,</span><br><span class="line">    <span class="attr">"babel-plugin-add-module-exports"</span>: <span class="string">"^0.1.2"</span>,</span><br><span class="line">    <span class="attr">"babel-plugin-dev-expression"</span>: <span class="string">"^0.2.1"</span>,</span><br><span class="line">    <span class="attr">"babel-polyfill"</span>: <span class="string">"^6.7.4"</span>,</span><br><span class="line">    <span class="attr">"babel-preset-es2015"</span>: <span class="string">"^6.6.0"</span>,</span><br><span class="line">    <span class="attr">"babel-preset-es2015-loose"</span>: <span class="string">"^7.0.0"</span>,</span><br><span class="line">    <span class="attr">"babel-preset-es2015-loose-native-modules"</span>: <span class="string">"^1.0.0"</span>,</span><br><span class="line">    <span class="attr">"babel-preset-react"</span>: <span class="string">"^6.5.0"</span>,</span><br><span class="line">    <span class="attr">"babel-preset-stage-0"</span>: <span class="string">"^6.5.0"</span>,</span><br><span class="line">    <span class="attr">"babel-register"</span>: <span class="string">"^6.7.2"</span>,</span><br><span class="line">    <span class="attr">"bootstrap"</span>: <span class="string">"^3.3.6"</span>,</span><br><span class="line">    <span class="attr">"bundle-loader"</span>: <span class="string">"^0.5.4"</span>,</span><br><span class="line">    <span class="attr">"codecov.io"</span>: <span class="string">"^0.1.6"</span>,</span><br><span class="line">    <span class="attr">"coveralls"</span>: <span class="string">"^2.11.9"</span>,</span><br><span class="line">    <span class="attr">"css-loader"</span>: <span class="string">"^0.23.1"</span>,</span><br><span class="line">    <span class="attr">"eslint"</span>: <span class="string">"^1.10.3"</span>,</span><br><span class="line">    <span class="attr">"eslint-config-rackt"</span>: <span class="string">"^1.1.1"</span>,</span><br><span class="line">    <span class="attr">"eslint-plugin-react"</span>: <span class="string">"^3.16.1"</span>,</span><br><span class="line">    <span class="attr">"expect"</span>: <span class="string">"^1.18.0"</span>,</span><br><span class="line">    <span class="attr">"express"</span>: <span class="string">"^4.13.4"</span>,</span><br><span class="line">    <span class="attr">"file-loader"</span>: <span class="string">"^0.8.5"</span>,</span><br><span class="line">    <span class="attr">"gzip-size"</span>: <span class="string">"^3.0.0"</span>,</span><br><span class="line">    <span class="attr">"history"</span>: <span class="string">"^2.1.0"</span>,</span><br><span class="line">    <span class="attr">"isomorphic-fetch"</span>: <span class="string">"^2.2.1"</span>,</span><br><span class="line">    <span class="attr">"isparta-loader"</span>: <span class="string">"^2.0.0"</span>,</span><br><span class="line">    <span class="attr">"pretty-bytes"</span>: <span class="string">"^3.0.1"</span>,</span><br><span class="line">    <span class="attr">"qs"</span>: <span class="string">"^6.1.0"</span>,</span><br><span class="line">    <span class="attr">"react"</span>: <span class="string">"^15.0.0"</span>,</span><br><span class="line">    <span class="attr">"react-addons-css-transition-group"</span>: <span class="string">"^15.0.0"</span>,</span><br><span class="line">    <span class="attr">"react-addons-test-utils"</span>: <span class="string">"^15.0.0"</span>,</span><br><span class="line">    <span class="attr">"react-bootstrap"</span>: <span class="string">"^0.29.3"</span>,</span><br><span class="line">    <span class="attr">"react-dom"</span>: <span class="string">"^15.0.0"</span>,</span><br><span class="line">    <span class="attr">"react-redux"</span>: <span class="string">"^4.4.5"</span>,</span><br><span class="line">    <span class="attr">"react-router"</span>: <span class="string">"^2.4.0"</span>,</span><br><span class="line">    <span class="attr">"react-router-bootstrap"</span>: <span class="string">"^0.23.0"</span>,</span><br><span class="line">    <span class="attr">"redux"</span>: <span class="string">"^3.5.2"</span>,</span><br><span class="line">    <span class="attr">"redux-logger"</span>: <span class="string">"^2.6.1"</span>,</span><br><span class="line">    <span class="attr">"redux-thunk"</span>: <span class="string">"^2.1.0"</span>,</span><br><span class="line">    <span class="attr">"rimraf"</span>: <span class="string">"^2.5.2"</span>,</span><br><span class="line">    <span class="attr">"style-loader"</span>: <span class="string">"^0.13.1"</span>,</span><br><span class="line">    <span class="attr">"url-loader"</span>: <span class="string">"^0.5.7"</span>,</span><br><span class="line">    <span class="attr">"webpack"</span>: <span class="string">"^1.12.14"</span>,</span><br><span class="line">    <span class="attr">"webpack-dev-middleware"</span>: <span class="string">"^1.6.1"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>到这里配置部分已经结束，接下来写一个小demo 来试试</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; render &#125; <span class="keyword">from</span> <span class="string">'react-dom'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">App</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">h1</span>&gt;</span>Welcome to React!<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">render( ( <span class="xml"><span class="tag">&lt;<span class="name">App</span> /&gt;</span> ), document.getElementById('content') );</span></span><br></pre></td></tr></table></figure>
+<p>示例代码地址 <a href="https://github.com/germanyt/react-study-example/tree/master/example/1" target="_blank" rel="external">Github</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://germanyt.github.io/React-study-notes-1/" data-id="cioau0e51000193wp0v0oj3oz" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/React-study-notes-2/">React 学习笔记 - 2</a>
+          </li>
+        
+          <li>
+            <a href="/React-study-notes-1/">React 学习笔记 - 1</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 Gavin<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
