@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   
-  <title>React 学习笔记 - 4 | Gavin&#39;s space</title>
+  <title>React 学习笔记 - 4 | Blog of Gavin</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="前言前边几节中学习了组件和路由控制，已经能够做一个静态的SPA了。但是对于一个富应用来说，我们只学习了View，接下来我们将要学习数据处理模块，在正式开始学习之前，先来介绍下这位新朋友。
 ReduxRedux 是 JavaScript 状态容器，提供可预测化的状态管理。可以让你构建一致化的应用，运行于不同的环境（客户端、服务器、原生应用），并且易于测试。Redux 由 Flux 演变而来，但受 E">
 <meta property="og:type" content="article">
 <meta property="og:title" content="React 学习笔记 - 4">
 <meta property="og:url" content="http://germanyt.github.io/React-study-notes-4/index.html">
-<meta property="og:site_name" content="Gavin's space">
+<meta property="og:site_name" content="Blog of Gavin">
 <meta property="og:description" content="前言前边几节中学习了组件和路由控制，已经能够做一个静态的SPA了。但是对于一个富应用来说，我们只学习了View，接下来我们将要学习数据处理模块，在正式开始学习之前，先来介绍下这位新朋友。
 ReduxRedux 是 JavaScript 状态容器，提供可预测化的状态管理。可以让你构建一致化的应用，运行于不同的环境（客户端、服务器、原生应用），并且易于测试。Redux 由 Flux 演变而来，但受 E">
 <meta property="og:updated_time" content="2016-05-24T09:11:54.000Z">
@@ -18,8 +18,9 @@ ReduxRedux 是 JavaScript 状态容器，提供可预测化的状态管理。可
 <meta name="twitter:title" content="React 学习笔记 - 4">
 <meta name="twitter:description" content="前言前边几节中学习了组件和路由控制，已经能够做一个静态的SPA了。但是对于一个富应用来说，我们只学习了View，接下来我们将要学习数据处理模块，在正式开始学习之前，先来介绍下这位新朋友。
 ReduxRedux 是 JavaScript 状态容器，提供可预测化的状态管理。可以让你构建一致化的应用，运行于不同的环境（客户端、服务器、原生应用），并且易于测试。Redux 由 Flux 演变而来，但受 E">
+<meta name="twitter:creator" content="@GermanyTang">
   
-    <link rel="alternate" href="/atom.xml" title="Gavin&#39;s space" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="Blog of Gavin" type="application/atom+xml">
   
   
     <link rel="icon" href="/favicon.png">
@@ -29,6 +30,19 @@ ReduxRedux 是 JavaScript 状态容器，提供可预测化的状态管理。可
   
   <link rel="stylesheet" href="/css/style.css">
   
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-40267048-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
 
 </head>
 
@@ -40,7 +54,7 @@ ReduxRedux 是 JavaScript 状态容器，提供可预测化的状态管理。可
   <div id="header-outer" class="outer">
     <div id="header-title" class="inner">
       <h1 id="logo-wrap">
-        <a href="/" id="logo">Gavin&#39;s space</a>
+        <a href="/" id="logo">Blog of Gavin</a>
       </h1>
       
     </div>
@@ -55,9 +69,9 @@ ReduxRedux 是 JavaScript 状态容器，提供可预测化的状态管理。可
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Zoeken"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://germanyt.github.io"></form>
@@ -183,7 +197,9 @@ ReduxRedux 是 JavaScript 状态容器，提供可预测化的状态管理。可
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://germanyt.github.io/React-study-notes-4/" data-id="ciol1xp5n0006b4wpoyq5x663" class="article-share-link">Delen</a>
+      <a data-url="http://germanyt.github.io/React-study-notes-4/" data-id="ciol1xp5n0006b4wpoyq5x663" class="article-share-link">Partager</a>
+      
+        <a href="http://germanyt.github.io/React-study-notes-4/#disqus_thread" class="article-comment-link">Commentaires</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/React/">React</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Redux/">Redux</a></li></ul>
@@ -196,7 +212,7 @@ ReduxRedux 是 JavaScript 状态容器，提供可预测化的状态管理。可
   
   
     <a href="/React-study-notes-3/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Ouder</strong>
+      <strong class="article-nav-caption">Ancien</strong>
       <div class="article-nav-title">React 学习笔记 - 3</div>
     </a>
   
@@ -205,6 +221,12 @@ ReduxRedux 是 JavaScript 状态容器，提供可预测化的状态管理。可
   
 </article>
 
+
+<section id="comments">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
 </section>
         
           <aside id="sidebar">
@@ -214,7 +236,7 @@ ReduxRedux 是 JavaScript 状态容器，提供可预测化的状态管理。可
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Labels</h3>
+    <h3 class="widget-title">Mot-clés</h3>
     <div class="widget">
       <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/">React</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React-router/">React-router</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redux/">Redux</a></li></ul>
     </div>
@@ -224,7 +246,7 @@ ReduxRedux 是 JavaScript 状态容器，提供可预测化的状态管理。可
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
+    <h3 class="widget-title">Nuage de mot-clés</h3>
     <div class="widget tagcloud">
       <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/React/" style="font-size: 20px;">React</a> <a href="/tags/React-router/" style="font-size: 10px;">React-router</a> <a href="/tags/Redux/" style="font-size: 10px;">Redux</a>
     </div>
@@ -233,7 +255,7 @@ ReduxRedux 是 JavaScript 状态容器，提供可预测化的状态管理。可
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Archieven</h3>
+    <h3 class="widget-title">Archives</h3>
     <div class="widget">
       <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li></ul>
     </div>
@@ -243,7 +265,7 @@ ReduxRedux 是 JavaScript 状态容器，提供可预测化的状态管理。可
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Recente berichten</h3>
+    <h3 class="widget-title">Articles récents</h3>
     <div class="widget">
       <ul>
         
@@ -276,7 +298,7 @@ ReduxRedux 是 JavaScript 状态容器，提供可预测化的状态管理。可
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2016 Gavin<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
 </footer>
@@ -289,6 +311,20 @@ ReduxRedux 是 JavaScript 状态容器，提供可预测化的状态管理。可
   
 </nav>
     
+<script>
+  var disqus_shortname = 'gavin8';
+  
+  var disqus_url = 'http://germanyt.github.io/React-study-notes-4/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
 
 <script src="//libs.baidu.com/jquery/2.0.3/jquery.min.js"></script>
 
