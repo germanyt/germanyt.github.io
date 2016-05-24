@@ -35,7 +35,7 @@ create有三种方式创建Component，实际开发中可根据实际情况选�
 
 class App extends React.Component {}这是ES6中class 继承的写法
 const App = React.createC">
-<meta property="og:updated_time" content="2016-05-19T09:30:17.000Z">
+<meta property="og:updated_time" content="2016-05-24T01:59:25.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="React 学习笔记 - 3">
 <meta name="twitter:description" content="简介本节主要学习React Component相关内容
@@ -88,9 +88,9 @@ const App = React.createC">
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://germanyt.github.io"></form>
@@ -141,8 +141,12 @@ const App = React.createC">
 <p>(3)只适用于简单组件</p>
 <h2 id="props"><a href="#props" class="headerlink" title="props"></a>props</h2><p>props的属性和方法来自于调用该 Component 时传递的内容。</p>
 <h4 id="children"><a href="#children" class="headerlink" title="children"></a>children</h4><p>JSX有两种方式render Component: <code>&lt;App /&gt;</code> &amp; <code>&lt;App&gt;Hello world&lt;/App&gt;</code>，第一种 没有children属性，第二种children可以是 <code>字符串</code>或<code>DOM树</code>，为DOM树时children是一个和树对应的数组。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">// 需要先 import Parent Component</span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Parent</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">code</span>&gt;</span>&amp;lt;Parent /&amp;gt;<span class="tag">&lt;/<span class="name">code</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Parent</span>&gt;</span>Hello world!<span class="tag">&lt;/<span class="name">Parent</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">code</span>&gt;</span>&amp;lt;Parent&amp;gt;字符串&amp;lt;/Parent&amp;gt;<span class="tag">&lt;/<span class="name">code</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Parent</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>这是H1<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h2</span>&gt;</span>这是H2<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">Parent</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">code</span>&gt;</span>&amp;lt;Parent&amp;gt;DOM Tree&amp;lt;/Parent&amp;gt;<span class="tag">&lt;/<span class="name">code</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Parent Component </span></span><br><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Parent</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">h3</span>&gt;</span>Parent<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>This is children:<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">        &#123;this.props.children&#125;</span><br><span class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Parent;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">// 需要先 import Parent Component</span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Parent</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">code</span>&gt;</span>&amp;lt;Parent /&amp;gt;<span class="tag">&lt;/<span class="name">code</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Parent</span>&gt;</span>Hello world!<span class="tag">&lt;/<span class="name">Parent</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">code</span>&gt;</span>&amp;lt;Parent&amp;gt;字符串&amp;lt;/Parent&amp;gt;<span class="tag">&lt;/<span class="name">code</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Parent</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>这是H1<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h2</span>&gt;</span>这是H2<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">Parent</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">code</span>&gt;</span>&amp;lt;Parent&amp;gt;DOM Tree&amp;lt;/Parent&amp;gt;<span class="tag">&lt;/<span class="name">code</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Parent Component </span></span><br><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Parent</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">h3</span>&gt;</span>Parent<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>This is children:<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">        &#123;this.props.children&#125;</span><br><span class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Parent;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
 <h4 id="手动传递"><a href="#手动传递" class="headerlink" title="手动传递"></a>手动传递</h4><p>React中 this.porps的属性除children外都需要手动传递，手动传递有两种方式：</p>
 <ol>
 <li><p>“不定参数“形式</p>
@@ -206,18 +210,29 @@ const App = React.createC">
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://germanyt.github.io/React-study-notes-3/" data-id="cioe3qvoa0000idwp10e9e457" class="article-share-link">Partager</a>
+      <a data-url="http://germanyt.github.io/React-study-notes-3/" data-id="ciokz9hys0001wvwpiu7vfr01" class="article-share-link">Share</a>
       
       
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/React/">React</a></li></ul>
+
     </footer>
   </div>
   
     
 <nav id="article-nav">
   
+    <a href="/React-study-notes-4/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          React 学习笔记 - 4
+        
+      </div>
+    </a>
+  
   
     <a href="/React-study-notes-2/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Ancien</strong>
+      <strong class="article-nav-caption">Older</strong>
       <div class="article-nav-title">React 学习笔记 - 2</div>
     </a>
   
@@ -234,9 +249,23 @@ const App = React.createC">
 
   
     
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/">React</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React-router/">React-router</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redux/">Redux</a></li></ul>
+    </div>
+  </div>
+
 
   
     
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/React/" style="font-size: 20px;">React</a> <a href="/tags/React-router/" style="font-size: 10px;">React-router</a> <a href="/tags/Redux/" style="font-size: 10px;">Redux</a>
+    </div>
+  </div>
+
   
     
   <div class="widget-wrap">
@@ -250,9 +279,13 @@ const App = React.createC">
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Articles récents</h3>
+    <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/React-study-notes-4/">React 学习笔记 - 4</a>
+          </li>
         
           <li>
             <a href="/React-study-notes-3/">React 学习笔记 - 3</a>
@@ -279,7 +312,7 @@ const App = React.createC">
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2016 Gavin<br>
-      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
 </footer>
@@ -293,7 +326,7 @@ const App = React.createC">
 </nav>
     
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="//libs.baidu.com/jquery/2.0.3/jquery.min.js"></script>
 
 
   <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
