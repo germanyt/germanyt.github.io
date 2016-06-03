@@ -74,6 +74,178 @@ ga('send', 'pageview');
       <div class="outer">
         <section id="main">
   
+    <article id="post-How-to-write-your-own-Virtual-DOM" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/How-to-write-your-own-Virtual-DOM/" class="article-date">
+  <time datetime="2016-06-02T06:21:30.000Z" itemprop="datePublished">2016-06-02</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/How-to-write-your-own-Virtual-DOM/">如何自己实现虚拟DOM</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>原文地址：<a href="https://medium.com/@deathmood/how-to-write-your-own-virtual-dom-ee74acc13060#.8eontjd52" target="_blank" rel="external">medium.com @deathmood</a></p>
+<p>自己实现虚拟DOM需要知道两件事情。你不需要深入研究 React 源码或者其它的实现源码，他们非常庞大和复杂，但是真正实现虚拟DOM部分的代码不到50行。50行代码！！！</p>
+<p>这里有两个概念：</p>
+<ul>
+<li>虚拟DOM是任何一种真实DOM的表现形式</li>
+<li>改变虚拟DOM树中的东西，我们将获得一个新的虚拟DOM树。通过算法来比较这两个树（新的和旧的虚拟树），找出不同点。然后对应虚拟树在真实DOM树中做最小的必要改变。</li>
+</ul>
+<p>就是这样！让我们一起来深入理解每个概念。</p>
+<h2 id="表示-DOM-树"><a href="#表示-DOM-树" class="headerlink" title="表示 DOM 树"></a>表示 DOM 树</h2><p>首先需要以某种方式将DOM树存储在内存中。我们可以用原生 Object 来做这件事。假设我们有一个这样的树：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">ul</span> <span class="attr">class</span>=<span class="string">"list"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">li</span>&gt;</span>item 1<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">li</span>&gt;</span>item 2<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>看起来很简单，不是吗？我们怎样只用JS对象来表示它呢？<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123; type: <span class="string">'ul'</span>, props: &#123; <span class="string">'class'</span>: <span class="string">'list'</span> &#125;, children: [</span><br><span class="line">  &#123; type: <span class="string">'li'</span>, props: &#123;&#125;, children: [<span class="string">'item 1'</span>] &#125;,</span><br><span class="line">  &#123; type: <span class="string">'li'</span>, props: &#123;&#125;, children: [<span class="string">'item 2'</span>] &#125;</span><br><span class="line">] &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里我们需要注意两点：</p>
+<ul>
+<li><p>我们用对象表示DOM元素</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; type: <span class="string">'…'</span>, props: &#123; … &#125;, children: [ … ] &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>我们用原生JS字符串表示DOM文本节点</p>
+</li>
+</ul>
+<p>但是用这样的方法写一个大树是很困难的。所以我们写一个辅助函数，她能让我们更容易理解结构：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">h</span>(<span class="params">type, props, …children</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123; type, props, children &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>现在，我们可以像这样来写DOM树：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">h(<span class="string">'ul'</span>, &#123; <span class="string">'class'</span>: <span class="string">'list'</span> &#125;,</span><br><span class="line">  h(<span class="string">'li'</span>, &#123;&#125;, <span class="string">'item 1'</span>),</span><br><span class="line">  h(<span class="string">'li'</span>, &#123;&#125;, <span class="string">'item 2'</span>),</span><br><span class="line">);</span><br></pre></td></tr></table></figure></p>
+<p>它看起来简洁多了，不是吗？但是我们可以更进一步。你听说过 JSX 吗？是的，在这里我想用它。它是怎么工作的？</p>
+<p>如果你读过<a href="https://babeljs.io/docs/plugins/transform-react-jsx/" target="_blank" rel="external">这里</a>的官方 Babel JSX 文档，你将会知道，Babel 编译这段代码：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">ul</span> <span class="attr">className</span>=<span class="string">"list"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">li</span>&gt;</span>item 1<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">li</span>&gt;</span>item 2<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>像这样：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">React.createElement(<span class="string">'ul'</span>, &#123; className: <span class="string">'list'</span> &#125;,</span><br><span class="line">  React.createElement(<span class="string">'li'</span>, &#123;&#125;, <span class="string">'item 1'</span>),</span><br><span class="line">  React.createElement(<span class="string">'li'</span>, &#123;&#125;, <span class="string">'item 2'</span>),</span><br><span class="line">);</span><br></pre></td></tr></table></figure></p>
+<p>注意到有一些相似？是的是的。如果我们能将 <code>React.createElement(…)</code> 替换成我们的 <code>h(…)</code>。事实上我们可以这样做——通过用叫做 <code>jsx pragma</code> 的东西。我们只需要在文件顶部写一行类注释的内容：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/** @jsx h */</span><br><span class="line">&lt;ul className="list"&gt;</span><br><span class="line">  &lt;li&gt;item 1&lt;/li&gt;</span><br><span class="line">  &lt;li&gt;item 2&lt;/li&gt;</span><br><span class="line">&lt;/ul&gt;</span><br></pre></td></tr></table></figure></p>
+<p>它告诉 Babel “嘿，编译 JSX 但是要用 <code>h</code> 代替 <code>React.createElement</code>。” 在这你可以用任意一个函数代替 <code>h</code> 进行编译。</p>
+<p>所以，像我前面说的那样，我们将用这种方法写DOM：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** @jsx h */</span></span><br><span class="line"><span class="keyword">const</span> a = (</span><br><span class="line">  <span class="xml"><span class="tag">&lt;<span class="name">ul</span> <span class="attr">className</span>=<span class="string">"list"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span>item 1<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span>item 2<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line">);</span><br></pre></td></tr></table></figure></p>
+<p>它将会被 Babel 编译成这样：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> a = (</span><br><span class="line">  h(<span class="string">'ul'</span>, &#123; className: <span class="string">'list'</span> &#125;,</span><br><span class="line">    h(<span class="string">'li'</span>, &#123;&#125;, <span class="string">'item 1'</span>),</span><br><span class="line">    h(<span class="string">'li'</span>, &#123;&#125;, <span class="string">'item 2'</span>),</span><br><span class="line">  );</span><br><span class="line">);</span><br></pre></td></tr></table></figure></p>
+<p>当函数 <code>h</code> 执行的时候，它会返回一个原生JS对象——我们虚拟DOM表示：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> a = (</span><br><span class="line">  &#123; type: <span class="string">'ul'</span>, props: &#123; className: <span class="string">'list'</span> &#125;, children: [</span><br><span class="line">    &#123; type: <span class="string">'li'</span>, props: &#123;&#125;, children: [<span class="string">'item 1'</span>] &#125;,</span><br><span class="line">    &#123; type: <span class="string">'li'</span>, props: &#123;&#125;, children: [<span class="string">'item 2'</span>] &#125;</span><br><span class="line">  ] &#125;</span><br><span class="line">);</span><br></pre></td></tr></table></figure></p>
+<p>开始吧！在 JSFiddle 中尝试（不要忘记设置语言为 Babel ）：<br><iframe scrolling="no" width="100%" height="300" src="http://jsfiddle.net/5qyLubt4/embedded/js,resources,html,css,result/light" frameborder="0" allowfullscreen></iframe></p>
+<h2 id="应用我们的-DOM-表示法"><a href="#应用我们的-DOM-表示法" class="headerlink" title="应用我们的 DOM 表示法"></a>应用我们的 DOM 表示法</h2><p>好了，现在我们已经用自己的结构的原生对象表示了我们的 DOM 树。这非常酷，但是我们需要用它以一种方式创建真实的DOM树，我们不能只将我们的表示法附加到 DOM 中。</p>
+<p>首先让我们做一些假设和定义一些术语：</p>
+<ul>
+<li>所有的真实 DOM 节点（元素和文本节点）变量将会用 <code>$</code> 开头——因此 <code>$parent</code> 将会是一个真实的 DOM 元素</li>
+<li>虚拟节点表示法将指定变量名为 <code>node</code></li>
+<li>像在 React 中，你只能有一个根节点——所有的其他节点都在里面</li>
+</ul>
+<p>好了，像这样说的，让我们写一个能将虚拟 DOM 节点转化成真实 DOM 节点的函数 <code>createElement(…)</code> 。现在先忽略 <code>props</code> 和 <code>children</code> ——我们以后将创建它：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createElement</span>(<span class="params">node</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> node === <span class="string">'string'</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">document</span>.createTextNode(node);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">document</span>.createElement(node.type);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>因为我们有文本节点（原生字符串）和 Elements(含有 type 的JS对象）像这样：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; type: <span class="string">'…'</span>, props: &#123; … &#125;, children: [ … ] &#125;</span><br></pre></td></tr></table></figure></p>
+<p>因此，我们能传递虚拟的文本节点和虚拟的 element 节点，它都能工作。<br>现在，让我们一起来思考子节点——他们每一个不是文本节点就是 Element 节点。所以它们也能被 <code>createElement(…)</code> 函数创建。耶，你感觉到了吗？它感觉像是递归。所以我们能为每个元素子节点调用 <code>createElement(…)</code> ，然后像这样 <code>appendChild()</code> 它们到我们的元素中：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createElement</span>(<span class="params">node</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> node === ‘string’) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">document</span>.createTextNode(node);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">const</span> $el = <span class="built_in">document</span>.createElement(node.type);</span><br><span class="line">  node.children</span><br><span class="line">    .map(createElement)</span><br><span class="line">    .forEach($el.appendChild.bind($el));</span><br><span class="line">  <span class="keyword">return</span> $el;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>哇哦，看起来很不错。现在我们先把 <code>props</code> 放在一边，以后再讨论它。我们不需要它来理解虚拟DOM的基础概念，但是它却会增加复杂度。</p>
+<p>现在开始让我们在 JSFiddle 中尝试它：<br><iframe scrolling="no" width="100%" height="300" src="http://jsfiddle.net/cL0Lc7au/embedded/js,resources,html,css,result/light" frameborder="0" allowfullscreen></iframe></p>
+<h2 id="变化处理"><a href="#变化处理" class="headerlink" title="变化处理"></a>变化处理</h2><p>我们已经能把虚拟DOM转换成真实DOM，现在思考虚拟DOM树之间的差别。我们需要写一个来对比两个虚拟DOM树（新和旧）并在真实DOM树中只做必要改变的算法。</p>
+<p>怎么对比树？我们需要下面几种情况：</p>
+<ul>
+<li>对应位置没有旧的节点——需要 <code>appendChild(…)</code> 添加节点<br><img src="https://cdn-images-1.medium.com/max/800/1*GFUWrX6pBgiDQ5Z-IvzjUw.png" alt="对应位置没有旧的节点"></li>
+<li>对应位置没有新的节点——需要 <code>removeChild(…)</code> 删除节点<br><img src="https://cdn-images-1.medium.com/max/800/1*VRoYwAeWPF0jbiWXsKb2HA.png" alt="对应位置没有新的节点"></li>
+<li>对应位置有不同的节点——需要 <code>replaceChild(…)</code> 替换节点<br><img src="https://cdn-images-1.medium.com/max/800/1*6iQYEH0APjbuPvYmnD7Qlw.png" alt="对应位置没有新的节点"></li>
+<li>节点相同——需要进一步对比子节点<br><img src="https://cdn-images-1.medium.com/max/800/1*x1Eq-uuqgL0z9d9qn_opww.png" alt="节点相同"></li>
+</ul>
+<p>好了，我们写一个 <code>updateElement(…)</code> 函数，传递三个参数（$parent, newNode and oldNode）给它，<code>$parent</code> 是虚拟节点对应的真实节点的父节点。现在我们来看怎么处理上面描述的几种情况。</p>
+<h2 id="没有旧节点"><a href="#没有旧节点" class="headerlink" title="没有旧节点"></a>没有旧节点</h2><p>这是非常简单的：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">updateElement</span>(<span class="params">$parent, newNode, oldNode</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!oldNode) &#123;</span><br><span class="line">    $parent.appendChild(</span><br><span class="line">      createElement(newNode)</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="没有新节点"><a href="#没有新节点" class="headerlink" title="没有新节点"></a>没有新节点</h2><p>这里有个问题——如果新虚拟树的当前位置没有节点，我们应该在真实DOM中移除它，但是我们应该怎么做呢？我们知道父元素（已被传递到函数中），因此我们假设调用 <code>$parent.removeChild(…)</code> 并传递真实DOM的引用给它。但是我们没有真实DOM的引用。如果我们知道节点在父元素中的位置，我们能够通过 <code>$parent.childNodes[index]</code> 得到它的引用， <code>index</code> 就是节点在父元素中的索引。</p>
+<p>我们假设 <code>index</code> 会传递给函数（后面你会看到它真的会被传递）。因此我们的代码会变成这样：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">updateElement</span>(<span class="params">$parent, newNode, oldNode, index = 0</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!oldNode) &#123;</span><br><span class="line">    $parent.appendChild(</span><br><span class="line">      createElement(newNode)</span><br><span class="line">    );</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!newNode) &#123;</span><br><span class="line">    $parent.removeChild(</span><br><span class="line">      $parent.childNodes[index]</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="节点变化"><a href="#节点变化" class="headerlink" title="节点变化"></a>节点变化</h2><p>首先我们需要一个对比两个节点的函数来告诉我们节点是否改变。我们应该考虑 elements 和文本节点：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">changed</span>(<span class="params">node1, node2</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">typeof</span> node1 !== <span class="keyword">typeof</span> node2 ||</span><br><span class="line">         <span class="keyword">typeof</span> node1 === ‘string’ &amp;&amp; node1 !== node2 ||</span><br><span class="line">         node1.type !== node2.type</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>现在我们已经有了当前节点在父元素的索引 (<code>index</code>) ，我们能很容易用新创建的节点替换它：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">updateElement</span>(<span class="params">$parent, newNode, oldNode, index = 0</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!oldNode) &#123;</span><br><span class="line">    $parent.appendChild(</span><br><span class="line">      createElement(newNode)</span><br><span class="line">    );</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!newNode) &#123;</span><br><span class="line">    $parent.removeChild(</span><br><span class="line">      $parent.childNodes[index]</span><br><span class="line">    );</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (changed(newNode, oldNode)) &#123;</span><br><span class="line">    $parent.replaceChild(</span><br><span class="line">      createElement(newNode),</span><br><span class="line">      $parent.childNodes[index]</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="比较子节点"><a href="#比较子节点" class="headerlink" title="比较子节点"></a>比较子节点</h2><p>最后，但是并非不重要的。我们应该遍历每个节点的子节点并对比它们，通过调用 <code>updateElement(…)</code> 。是的，又是递归。<br>但是有些写代码之前需要考虑的事情：</p>
+<ul>
+<li>我们应该比较只有节点是 Element 的子节点（文本节点没有子节点）</li>
+<li>传递当前节点的引用作为父节点</li>
+<li>必须一个一个的比较子节点，即使有些地方我们只有 “undefined” 这都是没问题的，我们的函数可以处理</li>
+<li>最后，<code>index</code>——它只是子节点在子节点数组中的索引</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">updateElement</span>(<span class="params">$parent, newNode, oldNode, index = 0</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!oldNode) &#123;</span><br><span class="line">    $parent.appendChild(</span><br><span class="line">      createElement(newNode)</span><br><span class="line">    );</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!newNode) &#123;</span><br><span class="line">    $parent.removeChild(</span><br><span class="line">      $parent.childNodes[index]</span><br><span class="line">    );</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (changed(newNode, oldNode)) &#123;</span><br><span class="line">    $parent.replaceChild(</span><br><span class="line">      createElement(newNode),</span><br><span class="line">      $parent.childNodes[index]</span><br><span class="line">    );</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (newNode.type) &#123;</span><br><span class="line">    <span class="keyword">const</span> newLength = newNode.children.length;</span><br><span class="line">    <span class="keyword">const</span> oldLength = oldNode.children.length;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; newLength || i &lt; oldLength; i++) &#123;</span><br><span class="line">      updateElement(</span><br><span class="line">        $parent.childNodes[index],</span><br><span class="line">        newNode.children[i],</span><br><span class="line">        oldNode.children[i],</span><br><span class="line">        i</span><br><span class="line">      );</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="所有的代码放在一起"><a href="#所有的代码放在一起" class="headerlink" title="所有的代码放在一起"></a>所有的代码放在一起</h2><p>我们把所有的代码放在 JSFiddle， 就像我承诺的一样它的执行部分只有50行代码。我们来看看：<br><iframe scrolling="no" width="100%" height="300" src="http://jsfiddle.net/0htedLra/embedded/js,resources,html,css,result/light" frameborder="0" allowfullscreen></iframe><br>打开开发者工具，观察点击 “Reload” 按钮时变化的应用。<br><img src="https://cdn-images-1.medium.com/max/800/1*e1s_Zc_fVxL3i0un2ZNEtg.gif" alt=""></p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>恭喜！我们已经做到了。我们写一个虚拟DOM的执行程序，它工作的很好。我希望通过阅读这篇文章，你能够理解虚拟DOM和React底层的运行机制。</p>
+<p>然而有些事情我们并没有在这里介绍。（在后面的文章中我会尝试着覆盖到它们）</p>
+<ul>
+<li>设置／对比／更新 Element 属性（props）</li>
+<li>处理事件——在 Elements 上添加事件监听</li>
+<li>像React一样在组件中使用虚拟DOM</li>
+<li>真正的 DOM 节点引用</li>
+<li>在直接改变真实 DOM 的库中使用虚拟DOM——像 jQuery 和它的插件一样</li>
+<li>以及更多的内容…</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://germanyt.github.io/How-to-write-your-own-Virtual-DOM/" data-id="ciozdneig0001kdwp8utvj6eo" class="article-share-link">Share</a>
+      
+        <a href="http://germanyt.github.io/How-to-write-your-own-Virtual-DOM/#disqus_thread" class="article-comment-link">留言</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Translate/">Translate</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Webpack-settings" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/Webpack-settings/" class="article-date">
+  <time datetime="2016-05-27T07:49:35.000Z" itemprop="datePublished">2016-05-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/Webpack-settings/">Webpack 使用笔记</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在学习React，开始使用gulp+browserify的方式，对于SPA应用来说，总是没有那么顺手。看到最近比较火的webpack，被它强大的插件库和loader惊艳到了，特别是可以在js中import css这样写组件岂不是很方便。就开始学习一下，当然要从官网Docoument开始学习。<br>webpack 支持命令行配置和webpack.config.js配置。命令行配置不太适用大型项目更适合小型的demo应用，在这里只学习webpack.config.js配置。</p>
+<h2 id="简单样例"><a href="#简单样例" class="headerlink" title="简单样例"></a>简单样例</h2><ul>
+<li>webpack.config.js<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> webpack = <span class="built_in">require</span>(<span class="string">'webpack'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    context: __dirname + <span class="string">"/app"</span>,</span><br><span class="line">    entry: <span class="string">"./entry"</span>,</span><br><span class="line">    output: &#123;</span><br><span class="line">        path: __dirname + <span class="string">"/dist"</span>,</span><br><span class="line">        filename: <span class="string">"bundle.js"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="context"><a href="#context" class="headerlink" title="context"></a>context</h2><p>为<code>entry</code>设置的基础目录绝对地址，默认 <code>process.cwd()</code>;</p>
+<h2 id="entry"><a href="#entry" class="headerlink" title="entry"></a>entry</h2><p>要构建的文件入口点，可以是三种类型：</p>
+<ol>
+<li><code>String</code> 一般是SPA应用的入口点</li>
+<li><code>Array</code> 配置中所有的文件都会被加载，最后一个文件将会作为出口</li>
+<li><code>Object</code> 适用于多入口页面配置，key 将会作为文件块的名称，属性值可以配置 String 或 Array</li>
+</ol>
+<p><em>字符串可以是路径，也可以是node模块名</em></p>
+<h2 id="output"><a href="#output" class="headerlink" title="output"></a>output</h2><p>输出配置，需要注意的是，多入口点的情况，只有一个输出配置。<br>如果要使用哈希（[hash] or [chunkhash]），必须确定一个统一的模块顺序。</p>
+<h4 id="output-filename"><a href="#output-filename" class="headerlink" title="output.filename"></a>output.filename</h4><p>有单入口输出和多入口输出的区别：</p>
+<ol>
+<li>单入口点</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://germanyt.github.io/Webpack-settings/" data-id="ciozdnei90000kdwp9dg2essn" class="article-share-link">Share</a>
+      
+        <a href="http://germanyt.github.io/Webpack-settings/#disqus_thread" class="article-comment-link">留言</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webpack/">webpack</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-React-study-notes-4" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/React-study-notes-4/" class="article-date">
@@ -192,7 +364,7 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://germanyt.github.io/React-study-notes-4/" data-id="cioo3ivld0000fewpbyyjfe84" class="article-share-link">Share</a>
+      <a data-url="http://germanyt.github.io/React-study-notes-4/" data-id="ciozdneis0004kdwpycnlj8rz" class="article-share-link">Share</a>
       
         <a href="http://germanyt.github.io/React-study-notes-4/#disqus_thread" class="article-comment-link">留言</a>
       
@@ -317,7 +489,7 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://germanyt.github.io/React-study-notes-3/" data-id="cioo3ivlx0004fewp1e7lmw12" class="article-share-link">Share</a>
+      <a data-url="http://germanyt.github.io/React-study-notes-3/" data-id="ciozdneiy0007kdwpqpw7ykxf" class="article-share-link">Share</a>
       
         <a href="http://germanyt.github.io/React-study-notes-3/#disqus_thread" class="article-comment-link">留言</a>
       
@@ -390,7 +562,7 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://germanyt.github.io/React-study-notes-2/" data-id="cioo3ivlv0003fewpzuchf888" class="article-share-link">Share</a>
+      <a data-url="http://germanyt.github.io/React-study-notes-2/" data-id="ciozdneiv0006kdwpgrfv5vaz" class="article-share-link">Share</a>
       
         <a href="http://germanyt.github.io/React-study-notes-2/#disqus_thread" class="article-comment-link">留言</a>
       
@@ -452,7 +624,7 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://germanyt.github.io/React-study-notes-1/" data-id="cioo3ivll0001fewphp2gz85r" class="article-share-link">Share</a>
+      <a data-url="http://germanyt.github.io/React-study-notes-1/" data-id="ciozdneip0003kdwpqc85kmag" class="article-share-link">Share</a>
       
         <a href="http://germanyt.github.io/React-study-notes-1/#disqus_thread" class="article-comment-link">留言</a>
       
@@ -478,7 +650,7 @@ ga('send', 'pageview');
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/">React</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React-router/">React-router</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redux/">Redux</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/">React</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React-router/">React-router</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redux/">Redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Translate/">Translate</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li></ul>
     </div>
   </div>
 
@@ -488,7 +660,7 @@ ga('send', 'pageview');
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/React/" style="font-size: 20px;">React</a> <a href="/tags/React-router/" style="font-size: 10px;">React-router</a> <a href="/tags/Redux/" style="font-size: 10px;">Redux</a>
+      <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/React/" style="font-size: 16.67px;">React</a> <a href="/tags/React-router/" style="font-size: 13.33px;">React-router</a> <a href="/tags/Redux/" style="font-size: 13.33px;">Redux</a> <a href="/tags/Translate/" style="font-size: 10px;">Translate</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a>
     </div>
   </div>
 
@@ -497,7 +669,7 @@ ga('send', 'pageview');
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li></ul>
     </div>
   </div>
 
@@ -510,6 +682,14 @@ ga('send', 'pageview');
       <ul>
         
           <li>
+            <a href="/How-to-write-your-own-Virtual-DOM/">如何自己实现虚拟DOM</a>
+          </li>
+        
+          <li>
+            <a href="/Webpack-settings/">Webpack 使用笔记</a>
+          </li>
+        
+          <li>
             <a href="/React-study-notes-4/">React 学习笔记 - 4</a>
           </li>
         
@@ -519,10 +699,6 @@ ga('send', 'pageview');
         
           <li>
             <a href="/React-study-notes-2/">React 学习笔记 - 2</a>
-          </li>
-        
-          <li>
-            <a href="/React-study-notes-1/">React 学习笔记 - 1</a>
           </li>
         
       </ul>

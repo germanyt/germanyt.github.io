@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Webpack 使用笔记 | Blog of Gavin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言最近在学习React，开始使用gulp+browserify的方式，对于SPA应用来说，总是没有那么顺手。看到最近比较火的webpack，被它强大的插件库和loader惊艳到了，特别是可以在js中import css这样写组件岂不是很方便。就开始学习一下，当然要从官网Docoument开始学习。webpack 支持命令行配置和webpack.config.js配置。命令行配置不太适用大型项目更">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Webpack 使用笔记">
+<meta property="og:url" content="http://germanyt.github.io/Webpack-settings/index.html">
+<meta property="og:site_name" content="Blog of Gavin">
+<meta property="og:description" content="前言最近在学习React，开始使用gulp+browserify的方式，对于SPA应用来说，总是没有那么顺手。看到最近比较火的webpack，被它强大的插件库和loader惊艳到了，特别是可以在js中import css这样写组件岂不是很方便。就开始学习一下，当然要从官网Docoument开始学习。webpack 支持命令行配置和webpack.config.js配置。命令行配置不太适用大型项目更">
+<meta property="og:updated_time" content="2016-06-03T06:54:44.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Webpack 使用笔记">
+<meta name="twitter:description" content="前言最近在学习React，开始使用gulp+browserify的方式，对于SPA应用来说，总是没有那么顺手。看到最近比较火的webpack，被它强大的插件库和loader惊艳到了，特别是可以在js中import css这样写组件岂不是很方便。就开始学习一下，当然要从官网Docoument开始学习。webpack 支持命令行配置和webpack.config.js配置。命令行配置不太适用大型项目更">
+<meta name="twitter:creator" content="@GermanyTang">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.useso.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-40267048-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Blog of Gavin</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://germanyt.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Webpack-settings" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/Webpack-settings/" class="article-date">
+  <time datetime="2016-05-27T07:49:35.000Z" itemprop="datePublished">2016-05-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Webpack 使用笔记
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在学习React，开始使用gulp+browserify的方式，对于SPA应用来说，总是没有那么顺手。看到最近比较火的webpack，被它强大的插件库和loader惊艳到了，特别是可以在js中import css这样写组件岂不是很方便。就开始学习一下，当然要从官网Docoument开始学习。<br>webpack 支持命令行配置和webpack.config.js配置。命令行配置不太适用大型项目更适合小型的demo应用，在这里只学习webpack.config.js配置。</p>
+<h2 id="简单样例"><a href="#简单样例" class="headerlink" title="简单样例"></a>简单样例</h2><ul>
+<li>webpack.config.js<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> webpack = <span class="built_in">require</span>(<span class="string">'webpack'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    context: __dirname + <span class="string">"/app"</span>,</span><br><span class="line">    entry: <span class="string">"./entry"</span>,</span><br><span class="line">    output: &#123;</span><br><span class="line">        path: __dirname + <span class="string">"/dist"</span>,</span><br><span class="line">        filename: <span class="string">"bundle.js"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="context"><a href="#context" class="headerlink" title="context"></a>context</h2><p>为<code>entry</code>设置的基础目录绝对地址，默认 <code>process.cwd()</code>;</p>
+<h2 id="entry"><a href="#entry" class="headerlink" title="entry"></a>entry</h2><p>要构建的文件入口点，可以是三种类型：</p>
+<ol>
+<li><code>String</code> 一般是SPA应用的入口点</li>
+<li><code>Array</code> 配置中所有的文件都会被加载，最后一个文件将会作为出口</li>
+<li><code>Object</code> 适用于多入口页面配置，key 将会作为文件块的名称，属性值可以配置 String 或 Array</li>
+</ol>
+<p><em>字符串可以是路径，也可以是node模块名</em></p>
+<h2 id="output"><a href="#output" class="headerlink" title="output"></a>output</h2><p>输出配置，需要注意的是，多入口点的情况，只有一个输出配置。<br>如果要使用哈希（[hash] or [chunkhash]），必须确定一个统一的模块顺序。</p>
+<h4 id="output-filename"><a href="#output-filename" class="headerlink" title="output.filename"></a>output.filename</h4><p>有单入口输出和多入口输出的区别：</p>
+<ol>
+<li>单入口点</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://germanyt.github.io/Webpack-settings/" data-id="ciozdnei90000kdwp9dg2essn" class="article-share-link">Share</a>
+      
+        <a href="http://germanyt.github.io/Webpack-settings/#disqus_thread" class="article-comment-link">留言</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webpack/">webpack</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/How-to-write-your-own-Virtual-DOM/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          如何自己实现虚拟DOM
+        
+      </div>
+    </a>
+  
+  
+    <a href="/React-study-notes-4/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">React 学习笔记 - 4</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<section id="comments">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/">React</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React-router/">React-router</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redux/">Redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Translate/">Translate</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/React/" style="font-size: 16.67px;">React</a> <a href="/tags/React-router/" style="font-size: 13.33px;">React-router</a> <a href="/tags/Redux/" style="font-size: 13.33px;">Redux</a> <a href="/tags/Translate/" style="font-size: 10px;">Translate</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/How-to-write-your-own-Virtual-DOM/">如何自己实现虚拟DOM</a>
+          </li>
+        
+          <li>
+            <a href="/Webpack-settings/">Webpack 使用笔记</a>
+          </li>
+        
+          <li>
+            <a href="/React-study-notes-4/">React 学习笔记 - 4</a>
+          </li>
+        
+          <li>
+            <a href="/React-study-notes-3/">React 学习笔记 - 3</a>
+          </li>
+        
+          <li>
+            <a href="/React-study-notes-2/">React 学习笔记 - 2</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 Gavin<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+<script>
+  var disqus_shortname = 'gavin8';
+  
+  var disqus_url = 'http://germanyt.github.io/Webpack-settings/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//libs.baidu.com/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
