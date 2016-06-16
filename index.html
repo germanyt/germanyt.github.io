@@ -74,6 +74,102 @@ ga('send', 'pageview');
       <div class="outer">
         <section id="main">
   
+    <article id="post-How-three-dots-changed-JavaScript" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/How-three-dots-changed-JavaScript/" class="article-date">
+  <time datetime="2016-06-16T10:45:59.000Z" itemprop="datePublished">2016-06-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/How-three-dots-changed-JavaScript/">三个点怎样改变了 JavaScript</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>当访问函数调用参数值的时候，我总是对 <code>arguments</code> 对象感觉不舒服。它硬编码的名字使得在一个内部函数中访问外部函数的 <code>arguments</code> 变得困难。<br>更糟糕的是 JS 中它作为类数组对象，但是不能使用数组的方法像 <code>.map()</code> 或 <code>.forEach()</code> 。</p>
+<p>在封闭函数中访问 <code>arguments</code> ，你不得不把它存储在一个临时变量中。遍历类数组对象，你不得不用鸭子类型间接调用。来看下面的例子：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">outerFunction</span>(<span class="params"></span>) </span>&#123;  </span><br><span class="line">  <span class="comment">// store arguments into a separated variable</span></span><br><span class="line">  <span class="keyword">var</span> argsOuter = <span class="built_in">arguments</span>;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">innerFunction</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// args is an array-like object</span></span><br><span class="line">    <span class="keyword">var</span> even = <span class="built_in">Array</span>.prototype.map.call(argsOuter, <span class="function"><span class="keyword">function</span>(<span class="params">item</span>) </span>&#123;</span><br><span class="line">      <span class="comment">// do something with argsOuter               </span></span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>另外一种情形是函数调用接收动态数量的参数。用一个数组作为参数是非常令人讨厌的。</p>
+<p>以 <code>.push(item1, ..., itemN)</code> 将元素一个个的插入到一个数组为例：<br>你必须枚举每个作为参数的元素。这样做有时候是不方便：经常整个数组的元素需要被添加。<br>在 ES5 中的解决方法是 <code>.apply()</code> ：一个不友好而且繁琐的方法。让我们看看：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> fruits = [<span class="string">'banana'</span>];  </span><br><span class="line"><span class="keyword">var</span> moreFruits = [<span class="string">'apple'</span>, <span class="string">'orange'</span>];  </span><br><span class="line"><span class="built_in">Array</span>.prototype.push.apply(fruits, moreFruits);  </span><br><span class="line"><span class="built_in">console</span>.log(fruits); <span class="comment">// ['banana', 'apple', 'orange']</span></span><br></pre></td></tr></table></figure></p>
+<p>幸运的是 JS 世界正在变化。三点操作符 <code>...</code> 能解决很多这种情形的问题。ES6 引入了这个操作符，对 JS 是一个显著的改善。</p>
+<p>这篇文章将通过 <code>...</code> 操作符的使用场景展示怎么解决类似问题。</p>
+<h2 id="Three-dots"><a href="#Three-dots" class="headerlink" title="Three dots"></a>Three dots</h2><p><strong>可变操作符</strong>被用来获得通过函数调用的变量列表。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">countArguments</span>(<span class="params">...args</span>) </span>&#123;  </span><br><span class="line">   <span class="keyword">return</span> args.length;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// get the number of arguments</span></span><br><span class="line">countArguments(<span class="string">'welcome'</span>, <span class="string">'to'</span>, <span class="string">'Earth'</span>); <span class="comment">// =&gt; 3</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>展开操作符</strong>被用于数组的解构，以及用数组填充函数调用参数。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> cold = [<span class="string">'autumn'</span>, <span class="string">'winter'</span>];  </span><br><span class="line"><span class="keyword">let</span> warm = [<span class="string">'spring'</span>, <span class="string">'summer'</span>];  </span><br><span class="line"><span class="comment">// construct an array</span></span><br><span class="line">[...cold, ...warm] <span class="comment">// =&gt; ['autumn', 'winter', 'spring', 'summer']</span></span><br><span class="line"><span class="comment">// destruct an array</span></span><br><span class="line"><span class="keyword">let</span> otherSeasons, autumn;  </span><br><span class="line">[autumn, ...otherSeasons] = cold;</span><br><span class="line">otherSeasons      <span class="comment">// =&gt; ['winter']  </span></span><br><span class="line"><span class="comment">// function arguments from an array</span></span><br><span class="line">cold.push(...warm);  </span><br><span class="line">cold              <span class="comment">// =&gt; ['autumn', 'winter', 'spring', 'summer']</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="改良的参数存取"><a href="#改良的参数存取" class="headerlink" title="改良的参数存取"></a>改良的参数存取</h2><h3 id="可变参数"><a href="#可变参数" class="headerlink" title="可变参数"></a>可变参数</h3><p>在简介中提到的，在复杂场景中函数体内处理 <code>arguments</code> 对象变得麻烦。</p>
+<p>例如 JS 内部函数 <code>filterNumbers()</code> 想访问外部函数 <code>sumOnlyNumbers()</code> 的 <code>arguments</code> ：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sumOnlyNumbers</span>(<span class="params"></span>) </span>&#123;  </span><br><span class="line">  <span class="keyword">var</span> args = <span class="built_in">arguments</span>;</span><br><span class="line">  <span class="keyword">var</span> numbers = filterNumbers();</span><br><span class="line">  <span class="keyword">return</span> numbers.reduce((sum, element) =&gt; sum + element);</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">filterNumbers</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">     <span class="keyword">return</span> <span class="built_in">Array</span>.prototype.filter.call(args, </span><br><span class="line">       element =&gt; <span class="keyword">typeof</span> element === <span class="string">'number'</span></span><br><span class="line">     );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">sumOnlyNumbers(<span class="number">1</span>, <span class="string">'Hello'</span>, <span class="number">5</span>, <span class="literal">false</span>); <span class="comment">// =&gt; 6</span></span><br></pre></td></tr></table></figure></p>
+<p>为了让 <code>filterNumbers()</code> 访问 <code>sumOnlyNumbers()</code> 的 <code>arguments</code>，你必须创建一个临时变量 <code>args</code> 。这是因为 <code>filterNumbers()</code> 定义自己的 <code>arguments</code> 对象会重写外部的 <code>arguments</code> 对象。<br>这种方法可行，但是太繁琐了。</p>
+<p>可变操作符优雅的解决了这个问题。它允许在函数声明中定义一个<strong>可变参数</strong> <code>...args</code> ：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sumOnlyNumbers</span>(<span class="params">...args</span>) </span>&#123;  </span><br><span class="line">  <span class="keyword">var</span> numbers = filterNumbers();</span><br><span class="line">  <span class="keyword">return</span> numbers.reduce((sum, element) =&gt; sum + element);</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">filterNumbers</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> args.filter(element =&gt; <span class="keyword">typeof</span> element === <span class="string">'number'</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">sumOnlyNumbers(<span class="number">1</span>, <span class="string">'Hello'</span>, <span class="number">5</span>, <span class="literal">false</span>); <span class="comment">// =&gt; 6</span></span><br></pre></td></tr></table></figure></p>
+<p>函数声明 <code>function sumOnlyNumbers(...args)</code> 表示 <code>args</code> 接收调用参数放在一个数组中。名字冲突解决了， <code>args</code> 就能够被内部的 <code>filterNumbers()</code> 使用了。<br>并且忘记类数组对象：<strong><code>args</code>是一个数组</strong>，非常棒的结果。 <code>filterNumbers()</code> 也能摆脱 <code>Array.prototype.filter.call()</code> 了，筛选方法直接调用 <code>args.filter()</code> 。</p>
+<p>注意可变参数应该是函数的最后一个参数。</p>
+<h3 id="有选择的可变参数"><a href="#有选择的可变参数" class="headerlink" title="有选择的可变参数"></a>有选择的可变参数</h3><p>如果不是所有的参数都包含在可变参数内，你可以一开始用逗号分隔的参数定义他们。明确的定义参数不包含在可变参数内。<br>让我们看个例子：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">filter</span>(<span class="params">type, ...items</span>) </span>&#123;  </span><br><span class="line">  <span class="keyword">return</span> items.filter(item =&gt; <span class="keyword">typeof</span> item === type);</span><br><span class="line">&#125;</span><br><span class="line">filter(<span class="string">'boolean'</span>, <span class="literal">true</span>, <span class="number">0</span>, <span class="literal">false</span>);        <span class="comment">// =&gt; [true, false]  </span></span><br><span class="line">filter(<span class="string">'number'</span>, <span class="literal">false</span>, <span class="number">4</span>, <span class="string">'Welcome'</span>, <span class="number">7</span>); <span class="comment">// =&gt; [4, 7]</span></span><br></pre></td></tr></table></figure></p>
+<p><code>arguments</code> 对象没有可选的特性并且总是包含所有的值。</p>
+<h3 id="箭头函数"><a href="#箭头函数" class="headerlink" title="箭头函数"></a>箭头函数</h3><p>箭头函数不能在函数体内定义 <code>arguments</code> 对象，但是能访问封闭作用域的 <code>arguments</code> 对象。如果你想要获取所有的参数，可以用可变参数。让我们在这个例子中尝试：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> outerArguments = <span class="built_in">arguments</span>;</span><br><span class="line">  <span class="keyword">const</span> concat = (...items) =&gt; &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="built_in">arguments</span> === outerArguments); <span class="comment">// =&gt; true</span></span><br><span class="line">    <span class="keyword">return</span> items.reduce((result, item) =&gt; result + item, <span class="string">''</span>);</span><br><span class="line">  &#125;;</span><br><span class="line">  concat(<span class="number">1</span>, <span class="number">5</span>, <span class="string">'nine'</span>); <span class="comment">// =&gt; '15nine'</span></span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure></p>
+<p><code>items</code> 可变参数在一个数组中包含了函数调用的所有参数。并且 <code>arguments</code> 对象是从封闭作用域中取得与 <code>outerArguments</code> 变量相等，所以它没有实际意义。</p>
+<h2 id="改良的函数调用"><a href="#改良的函数调用" class="headerlink" title="改良的函数调用"></a>改良的函数调用</h2><p>在文章简介中，第二个问题提出了有没有更好的方式用一个数组填充调用参数。<br>ES5 在函数对象上提供了 <code>.apply()</code> 方法解决这个问题。不幸的是，这个方法有三个问题：</p>
+<ul>
+<li>必须手动指定函数调用的上下文</li>
+<li>不能用做构造函数调用</li>
+<li>最好有一个更短的解决方案</li>
+</ul>
+<p>让我们来看 <code>.apply()</code> 的用例：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> countries = [<span class="string">'Moldova'</span>, <span class="string">'Ukraine'</span>];  </span><br><span class="line">countries.push.apply(countries, [<span class="string">'USA'</span>, <span class="string">'Japan'</span>]);  </span><br><span class="line"><span class="built_in">console</span>.log(countries); <span class="comment">// =&gt; ['Moldova', 'Ukraine', 'USA', 'Japan']</span></span><br></pre></td></tr></table></figure></p>
+<p>上面例子中， <code>.apply()</code> 中表示的第二次上下文 <code>countries</code> 看起来是不相干的。在对象上 <code>countries.push</code> 决定方法调用已经足够了。<br>整个调用看起来很繁琐。</p>
+<p><strong>展开运算符</strong>用数组中的值填充函数调用的参数。让我们用展开运算符改良上面的例子：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> countries = [<span class="string">'Moldova'</span>, <span class="string">'Ukraine'</span>];  </span><br><span class="line">countries.push(...[<span class="string">'USA'</span>, <span class="string">'Japan'</span>]);  </span><br><span class="line"><span class="built_in">console</span>.log(countries); <span class="comment">// =&gt; ['Moldova', 'Ukraine', 'USA', 'Japan']</span></span><br></pre></td></tr></table></figure></p>
+<p>正如所见，展开运算符是更清晰简单的解决方案。只附加了三点（<code>...</code>）字符。</p>
+<p>展开运算符能让一个数组填充构造函数的调用参数，用 <code>.apply()</code> 的时候这事不可能的。让我们看个例子：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">King</span> </span>&#123;  </span><br><span class="line">   <span class="keyword">constructor</span>(name, country) &#123;</span><br><span class="line">     <span class="keyword">this</span>.name = name;</span><br><span class="line">     <span class="keyword">this</span>.country = country;     </span><br><span class="line">   &#125;</span><br><span class="line">   getDescription() &#123;</span><br><span class="line">     <span class="keyword">return</span> <span class="string">`<span class="subst">$&#123;this.name&#125;</span> leads <span class="subst">$&#123;this.country&#125;</span>`</span>;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> details = [<span class="string">'Alexander the Great'</span>, <span class="string">'Greece'</span>];  </span><br><span class="line"><span class="keyword">var</span> Alexander = <span class="keyword">new</span> King(...details);  </span><br><span class="line">Alexander.getDescription(); <span class="comment">// =&gt; 'Alexander the Great leads Greece'</span></span><br></pre></td></tr></table></figure></p>
+<p>此外你也可以在同一个调用中联合多个展开操作符和普通参数。下面的例子移除数组中已经存在的元素，然后添加另一个数组和一个元素：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> numbers = [<span class="number">1</span>, <span class="number">2</span>];  </span><br><span class="line"><span class="keyword">var</span> evenNumbers = [<span class="number">4</span>, <span class="number">8</span>];  </span><br><span class="line"><span class="keyword">const</span> zero = <span class="number">0</span>;  </span><br><span class="line">numbers.splice(<span class="number">0</span>, <span class="number">2</span>, ...evenNumbers, zero);  </span><br><span class="line"><span class="built_in">console</span>.log(numbers); <span class="comment">// =&gt; [4, 8, 0]</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="改良的数组操作"><a href="#改良的数组操作" class="headerlink" title="改良的数组操作"></a>改良的数组操作</h2><h3 id="数组结构"><a href="#数组结构" class="headerlink" title="数组结构"></a>数组结构</h3><p>数组字面量 <code>[item1, item2, ...]</code> 除了枚举不能提供的功能。</p>
+<p>展开运算符通过允许插入其他数组（或任何可迭代的类型）到初始化实例中改良数组字面量。<br>这个改良使下面描述的任务更容易实现。</p>
+<p>创建一个初始化元素来自其他数组的数组：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> initial = [<span class="number">0</span>, <span class="number">1</span>];  </span><br><span class="line"><span class="keyword">var</span> numbers1 = [...initial, <span class="number">5</span>, <span class="number">7</span>];  </span><br><span class="line"><span class="built_in">console</span>.log(numbers1); <span class="comment">// [0, 1, 5, 7]  </span></span><br><span class="line"><span class="keyword">let</span> numbers2 = [<span class="number">4</span>, <span class="number">8</span>, ...initial];  </span><br><span class="line"><span class="built_in">console</span>.log(numbers2); <span class="comment">// =&gt; [4, 8, 0, 1]</span></span><br></pre></td></tr></table></figure></p>
+<p><code>number1</code> 和 <code>number2</code> 数组用数组字面量创建，同时 <code>initial</code> 中的项被用来初始化。</p>
+<p><strong>连结</strong>两个或更多的数组：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> odds = [<span class="number">1</span>, <span class="number">5</span>, <span class="number">7</span>];  </span><br><span class="line"><span class="keyword">var</span> evens = [<span class="number">4</span>, <span class="number">6</span>, <span class="number">8</span>];  </span><br><span class="line"><span class="keyword">var</span> all = [...odds, ...evens];  </span><br><span class="line"><span class="built_in">console</span>.log(all); <span class="comment">// [1, 5, 7, 4, 6, 8]</span></span><br></pre></td></tr></table></figure></p>
+<p><code>all</code> 数组通过连结 <code>odds</code> 和 <code>evens</code> 数组创建。</p>
+<p><strong>克隆</strong>数组实例：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> words = [<span class="string">'Hi'</span>, <span class="string">'Hello'</span>, <span class="string">'Good day'</span>];  </span><br><span class="line"><span class="keyword">var</span> otherWords = [...words];  </span><br><span class="line"><span class="built_in">console</span>.log(otherWords);           <span class="comment">// =&gt; ['Hi', 'Hello', 'Good day']  </span></span><br><span class="line"><span class="built_in">console</span>.log(otherWords === words); <span class="comment">// =&gt; false</span></span><br></pre></td></tr></table></figure></p>
+<p><code>otherWords</code> 是 <code>words</code> 数组的一个克隆版本。注意克隆只发生在数组本身，不是内部元素（即不是深度克隆）。</p>
+<h3 id="数组解构"><a href="#数组解构" class="headerlink" title="数组解构"></a>数组解构</h3><p>在 ES6 中可以使用的解构赋值是很强大的从数组对象中提取数据的表达式。</p>
+<p>作为解构的一部分，展开操作符提取数组的一部分。提取结果总是一个数组。</p>
+<p>按照语法，展开操作符应该是解构赋值的最后一个：<code>[extractItem1, ...extractedArray] = destructedArray</code> 。</p>
+<p>让我们看一些应用：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> seasons = [<span class="string">'winter'</span>, <span class="string">'spring'</span>, <span class="string">'summer'</span>, <span class="string">'autumn'</span>];  </span><br><span class="line"><span class="keyword">var</span> coldSeason, otherSeasons;  </span><br><span class="line">[coldSeason, ...otherSeasons] = seasons;</span><br><span class="line"><span class="built_in">console</span>.log(coldSeason);   <span class="comment">// =&gt; 'winter'  </span></span><br><span class="line"><span class="built_in">console</span>.log(otherSeasons); <span class="comment">// =&gt; ['spring', 'summer', 'autumn']</span></span><br></pre></td></tr></table></figure></p>
+<p><code>[coldSeason, ...otherSeasons]</code> 提取了第一项 <code>winter</code> 到 <code>coldSeason</code> 变量，余下的元素放在 <code>otherSeason</code> 数组。</p>
+<h2 id="展开操作符和迭代协议"><a href="#展开操作符和迭代协议" class="headerlink" title="展开操作符和迭代协议"></a>展开操作符和迭代协议</h2><p>展开操作符用迭代协议在元素上操作并收集结果。这使得展开操作符非常有用，因为任意的对象能定义操作符怎么提取数据。</p>
+<p>一个遵守迭代协议的对象是可迭代的。<br>迭代协议要求对象包含一个特殊属性。这个属性名叫 <code>Symbol.iterator</code> ，它的值是一个返回迭代对象的函数。这个迭代对象应该遵守迭代协议。它需要提供一个 <code>next</code> 属性，属性的值是一个函数，函数的返回值是包含 <code>done</code> （表示迭代结束的布尔值）和 <code>value</code> （迭代结果）属性的对象。<br>看起来通过文字描述理解了迭代协议，然后后面的代码相当简单。</p>
+<p>操作符从对象或原生类型取出数据必须被有序迭代。</p>
+<p>很多原生类型和对象能被迭代：字符串、数组、类型数组、sets 和 maps。所以他们默认能使用展开操作符。<br>我们来看遵守迭代协议的字符串怎么被展开的：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> str = <span class="string">'hi'</span>;  </span><br><span class="line"><span class="keyword">var</span> iterator = str[<span class="built_in">Symbol</span>.iterator]();  </span><br><span class="line">iterator.toString(); <span class="comment">// =&gt; '[object String Iterator]'  </span></span><br><span class="line">iterator.next();     <span class="comment">// =&gt; &#123; value: 'h', done: false &#125;  </span></span><br><span class="line">iterator.next();     <span class="comment">// =&gt; &#123; value: 'i', done: false &#125;  </span></span><br><span class="line">iterator.next();     <span class="comment">// =&gt; &#123; value: undefined, done: true &#125;  </span></span><br><span class="line">[...str];            <span class="comment">// =&gt; ['h', 'i']</span></span><br></pre></td></tr></table></figure></p>
+<p>我喜欢用对象自定义迭代执行展开操作符。你能控制怎样展开你的对象——一个实用的代码技巧。</p>
+<p>下面的例子制造一个符合迭代协议的类数组对象，然后用展开操作符转换成数组。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">iterator</span>(<span class="params"></span>) </span>&#123;  </span><br><span class="line">  <span class="keyword">var</span> index = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    next: () =&gt; (&#123; <span class="comment">// Conform to Iterator protocol</span></span><br><span class="line">      done : index &gt;= <span class="keyword">this</span>.length,</span><br><span class="line">      value: <span class="keyword">this</span>[index++]</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> arrayLike = &#123;  </span><br><span class="line">  <span class="number">0</span>: <span class="string">'Cat'</span>,</span><br><span class="line">  <span class="number">1</span>: <span class="string">'Bird'</span>,</span><br><span class="line">  length: <span class="number">2</span></span><br><span class="line">&#125;;</span><br><span class="line">arrayLike[<span class="built_in">Symbol</span>.iterator] = iterator; <span class="comment">//Conform to Iterable Protocol  </span></span><br><span class="line"><span class="keyword">var</span> array = [...arrayLike];  </span><br><span class="line"><span class="built_in">console</span>.log(array); <span class="comment">// =&gt; ['Cat', 'Bird']</span></span><br></pre></td></tr></table></figure></p>
+<p><code>arrayLike[Symbol.iterator]</code> 在对象上创建一个包含迭代函数 <code>iterator()</code> 的属性使对象符合迭代协议。 <code>iterator()</code> 返回一个包含返回一个控制对象 <code>{done: &lt;boolean&gt;, value: &lt;item&gt;}</code> 的 <code>next</code> 函数的对象（符合迭代协议）。<br>由于现在 <code>arrayLike</code> 是可迭代的，展开操作符就能取出它的元素放入一个数组： <code>[...arrayLike]</code> 。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>三点操作符为 JS 添加了一堆非常好的特性。</p>
+<p>可变操书似的收集参数更容易了。它理应替代硬编码的类数组对象 <code>arguments</code>。如果情形允许在可变参数和 <code>arguments</code> 之间选择，那就选择第一个。</p>
+<p><code>.apply()</code> 的冗长语法是不方便的。当调用参数取自一个数组的时候，展开操作符是一个很好的选择。</p>
+<p>展开操作符改良了数组字面量。你能更简单的初始化、连结和克隆数组。</p>
+<p>你能用解构赋值取出数组的一部分。结合迭代协议在更多可配置的方式中使用展开操作符变得可能。</p>
+<p>我希望从现在开始展开操作符经常出现在你的代码中！</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://germanyt.github.io/How-three-dots-changed-JavaScript/" data-id="cipi6lonx0000blwp1tyrlu9v" class="article-share-link">Share</a>
+      
+        <a href="http://germanyt.github.io/How-three-dots-changed-JavaScript/#disqus_thread" class="article-comment-link">留言</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Translate/">Translate</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-How-to-write-your-own-Virtual-DOM" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/How-to-write-your-own-Virtual-DOM/" class="article-date">
@@ -174,7 +270,7 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://germanyt.github.io/How-to-write-your-own-Virtual-DOM/" data-id="ciozdneig0001kdwp8utvj6eo" class="article-share-link">Share</a>
+      <a data-url="http://germanyt.github.io/How-to-write-your-own-Virtual-DOM/" data-id="cipi6lood0003blwpr5ipj24b" class="article-share-link">Share</a>
       
         <a href="http://germanyt.github.io/How-to-write-your-own-Virtual-DOM/#disqus_thread" class="article-comment-link">留言</a>
       
@@ -306,7 +402,7 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://germanyt.github.io/React-study-notes-4/" data-id="ciozdneis0004kdwpycnlj8rz" class="article-share-link">Share</a>
+      <a data-url="http://germanyt.github.io/React-study-notes-4/" data-id="cipi6loq2000sblwp7lodgbtt" class="article-share-link">Share</a>
       
         <a href="http://germanyt.github.io/React-study-notes-4/#disqus_thread" class="article-comment-link">留言</a>
       
@@ -431,7 +527,7 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://germanyt.github.io/React-study-notes-3/" data-id="ciozdneiy0007kdwpqpw7ykxf" class="article-share-link">Share</a>
+      <a data-url="http://germanyt.github.io/React-study-notes-3/" data-id="cipi6lopt000pblwpz5zim9mc" class="article-share-link">Share</a>
       
         <a href="http://germanyt.github.io/React-study-notes-3/#disqus_thread" class="article-comment-link">留言</a>
       
@@ -504,7 +600,7 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://germanyt.github.io/React-study-notes-2/" data-id="ciozdneiv0006kdwpgrfv5vaz" class="article-share-link">Share</a>
+      <a data-url="http://germanyt.github.io/React-study-notes-2/" data-id="cipi6looh0004blwpctctbqk4" class="article-share-link">Share</a>
       
         <a href="http://germanyt.github.io/React-study-notes-2/#disqus_thread" class="article-comment-link">留言</a>
       
@@ -566,7 +662,7 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://germanyt.github.io/React-study-notes-1/" data-id="ciozdneip0003kdwpqc85kmag" class="article-share-link">Share</a>
+      <a data-url="http://germanyt.github.io/React-study-notes-1/" data-id="cipi6loo40001blwpmhsfw29d" class="article-share-link">Share</a>
       
         <a href="http://germanyt.github.io/React-study-notes-1/#disqus_thread" class="article-comment-link">留言</a>
       
@@ -602,7 +698,7 @@ ga('send', 'pageview');
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/React/" style="font-size: 16.67px;">React</a> <a href="/tags/React-router/" style="font-size: 13.33px;">React-router</a> <a href="/tags/Redux/" style="font-size: 13.33px;">Redux</a> <a href="/tags/Translate/" style="font-size: 10px;">Translate</a>
+      <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/React/" style="font-size: 15px;">React</a> <a href="/tags/React-router/" style="font-size: 10px;">React-router</a> <a href="/tags/Redux/" style="font-size: 10px;">Redux</a> <a href="/tags/Translate/" style="font-size: 10px;">Translate</a>
     </div>
   </div>
 
@@ -624,6 +720,10 @@ ga('send', 'pageview');
       <ul>
         
           <li>
+            <a href="/How-three-dots-changed-JavaScript/">三个点怎样改变了 JavaScript</a>
+          </li>
+        
+          <li>
             <a href="/How-to-write-your-own-Virtual-DOM/">如何自己实现虚拟DOM</a>
           </li>
         
@@ -637,10 +737,6 @@ ga('send', 'pageview');
         
           <li>
             <a href="/React-study-notes-2/">React 学习笔记 - 2</a>
-          </li>
-        
-          <li>
-            <a href="/React-study-notes-1/">React 学习笔记 - 1</a>
           </li>
         
       </ul>
